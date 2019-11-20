@@ -9,10 +9,6 @@ import utilities.BasicFunctions;
 
 public class WordAnalyzer {
 	private static Random	random						= new Random();
-	// The sum of letters of analyzed words in the element file
-	private Integer			totalLetters				= 0;
-	// The total number of analyzed words in the element file
-	private Integer			totalAnalyzedWords			= 0;
 	// The frequency of a bigrams of letters and the frequency of the next letters that can follow them
 	private JSONObject		phonemeAnalysis	= new JSONObject();
 	private String analysisFilePath;
@@ -32,30 +28,6 @@ public class WordAnalyzer {
 
 	public void setResultsFilePath(String resultsFilePath) {
 		this.resultsFilePath = resultsFilePath;
-	}
-
-	public Integer getTotalLetters() {
-		return totalLetters;
-	}
-
-	public void setTotalLetters(Integer totalLetters) {
-		this.totalLetters = totalLetters;
-	}
-
-	public void incrementTotalLetters() {
-		totalLetters++;
-	}
-
-	public Integer getTotalAnalyzedWords() {
-		return totalAnalyzedWords;
-	}
-
-	public void setTotalAnalyzedWords(Integer totalAnalysedWords) {
-		this.totalAnalyzedWords = totalAnalysedWords;
-	}
-
-	public void incrementTotalAnalyzedWords() {
-		totalAnalyzedWords++;
 	}
 
 	public JSONObject getPhonemeAnalysis() {
@@ -108,6 +80,14 @@ public class WordAnalyzer {
 		return nextChar;
 	}
 
+	private String getTwoLastChar(String newWord) {
+		String lastTwoChars = newWord.substring(newWord.length() - 2, newWord.length());
+		if(lastTwoChars.contains("\u0303")) {
+			lastTwoChars = newWord.substring(newWord.length() - 3, newWord.length());
+		}
+		return lastTwoChars;
+	}
+
 	private boolean hasConsone(String lastTwoChars) {
 		return lastTwoChars.contains("l") ||
 				lastTwoChars.contains("b") ||
@@ -122,34 +102,26 @@ public class WordAnalyzer {
 				lastTwoChars.contains("k") ||
 				lastTwoChars.contains("z") ||
 				lastTwoChars.contains("s") ||
-				lastTwoChars.contains("θ") ||
-				lastTwoChars.contains("ð") ||
-				lastTwoChars.contains("�?") ||
-				lastTwoChars.contains("χ") ||
-				lastTwoChars.contains("ʒ") ||
-				lastTwoChars.contains("ʃ");
-	}
-
-	private String getTwoLastChar(String newWord) {
-		String lastTwoChars = newWord.substring(newWord.length() - 2, newWord.length());
-		if(lastTwoChars.contains("\u0303")) {
-			lastTwoChars = newWord.substring(newWord.length() - 3, newWord.length());
-		}
-		return lastTwoChars;
+				lastTwoChars.contains("\u03b8") ||
+				lastTwoChars.contains("\u00f0") ||
+				lastTwoChars.contains("\u0281") ||
+				lastTwoChars.contains("\u03c7") ||
+				lastTwoChars.contains("\u0292") ||
+				lastTwoChars.contains("\u0283");
 	}
 
 	private boolean hasVowel(String lastTwoChars) {
 		return lastTwoChars.contains("a") ||
-				lastTwoChars.contains("ɑ̃") ||
+				lastTwoChars.contains("\u0251\u0303") ||
 				lastTwoChars.contains("e") ||
 				lastTwoChars.contains("i") ||
-				lastTwoChars.contains("ɛ") ||
-				lastTwoChars.contains("ɛ̃") ||
+				lastTwoChars.contains("\u025b") ||
+				lastTwoChars.contains("\u025b\u0303") ||
 				lastTwoChars.contains("o") ||
 				lastTwoChars.contains("u") ||
 				lastTwoChars.contains("y") ||
-				lastTwoChars.contains("ɔ̃") ||
-				lastTwoChars.contains("ø");
+				lastTwoChars.contains("\u0254\u0303") ||
+				lastTwoChars.contains("\u00f8");
 	}
 
 	private String getNextChar(String newWord) throws JSONException {
@@ -157,6 +129,7 @@ public class WordAnalyzer {
 		JSONObject nextPossibilities = getNextPossibilities(newWord);
 		int randomNextCharRank = getRandomCharRank(nextPossibilities);
 		int sumOfPreviousCharRank = 0;
+		
 		Iterator<?> iteratorNextChar = nextPossibilities.keys();
 		while (!BasicFunctions.rankFound(sumOfPreviousCharRank, randomNextCharRank) && iteratorNextChar.hasNext()) {
 			nextChar = iteratorNextChar.next().toString();
@@ -210,40 +183,17 @@ public class WordAnalyzer {
 	 * @throws JSONException : All the JSON exceptions
 	 */
 	private String getWordBeginning() throws JSONException {
-		int rankToFind = getRandomMonogramRank();
-		int sumOfPreviousPhonemeFrequency = 0;
+		int rankToFind = random.nextInt(phonemeAnalysis.length()) + 1;
 		String firstPhoneme = "";
-		String secondPhoneme = "";
-		JSONObject phonemeNextPossibilities = new JSONObject();
 
 		// Get first letter
 		Iterator<?> iteratorPhoneme = phonemeAnalysis.keys();
-		while (!BasicFunctions.rankFound(sumOfPreviousPhonemeFrequency, rankToFind) && iteratorPhoneme.hasNext()) {
+		while (rankToFind != 0) {
 			firstPhoneme = iteratorPhoneme.next().toString();
-			phonemeNextPossibilities = phonemeAnalysis.getJSONObject(firstPhoneme);
-			sumOfPreviousPhonemeFrequency += getSumOfPossibilitiesFrequency(phonemeNextPossibilities);
+			rankToFind--;
 		}
 
-		sumOfPreviousPhonemeFrequency -= getSumOfPossibilitiesFrequency(phonemeNextPossibilities);
-
-		//Get second letter
-		Iterator<?> iteratorSecondLetter = phonemeNextPossibilities.keys();
-		while (!BasicFunctions.rankFound(sumOfPreviousPhonemeFrequency, rankToFind) && iteratorSecondLetter.hasNext()) {
-			secondPhoneme = iteratorSecondLetter.next().toString();
-			sumOfPreviousPhonemeFrequency += phonemeNextPossibilities.getInt(secondPhoneme);
-		}
-
-		return firstPhoneme + secondPhoneme;
-	}
-
-	/**
-	 * Get a random number that symbolizes the rank of a monogram
-	 * (bigram of 1 letter)
-	 * 
-	 * @return the random rank of a monogram
-	 */
-	private int getRandomMonogramRank() {
-		return random.nextInt(totalAnalyzedWords) + 1;
+		return firstPhoneme + getNextChar(firstPhoneme);
 	}
 
 	/**

@@ -33,9 +33,14 @@ public class WordsFilesManager {
 	 */
 	public static void parseAnalysisFile(WordAnalyzer analyzer) throws JSONException, IOException {
 		BufferedReader br = getBufferReader(ANALYSIS_FOLDER + analyzer.getAnalysisFilePath());
-		analyzer.setTotalLetters(Integer.parseInt(br.readLine()));
-		analyzer.setTotalAnalyzedWords(Integer.parseInt(br.readLine()));
-		analyzer.setPhonemeAnalysis(new JSONObject(br.readLine()));
+		String line = "";
+		String file = "";
+		
+		while((line = br.readLine()) != null) {
+			file += line;
+		}
+		
+		analyzer.setPhonemeAnalysis(new JSONObject(file));
 		br.close();
 	}
 
