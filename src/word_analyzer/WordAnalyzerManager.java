@@ -1,4 +1,4 @@
-package word_analyser;
+package word_analyzer;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

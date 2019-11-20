@@ -1,4 +1,4 @@
-package word_analyser;
+package word_analyzer;
 import java.util.Iterator;
 import java.util.Random;
 
@@ -124,7 +124,7 @@ public class WordAnalyzer {
 				lastTwoChars.contains("s") ||
 				lastTwoChars.contains("θ") ||
 				lastTwoChars.contains("ð") ||
-				lastTwoChars.contains("ʁ") ||
+				lastTwoChars.contains("�?") ||
 				lastTwoChars.contains("χ") ||
 				lastTwoChars.contains("ʒ") ||
 				lastTwoChars.contains("ʃ");

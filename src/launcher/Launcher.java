@@ -2,8 +2,8 @@ package launcher;
 import java.io.*;
 import org.json.*;
 
-import word_analyser.WordAnalyzerManager;
-import word_analyser.WordAnalyzer;
+import word_analyzer.WordAnalyzer;
+import word_analyzer.WordAnalyzerManager;
 
 /**
  * 
