@@ -1,4 +1,5 @@
-# WordCreator
+# WordCreatorPhoneme
+Simplified version of the word creator, using only phonemes.
 Creates words with a certain consonance that you can customize
 
 ## How to use it ?
@@ -31,15 +32,13 @@ These files are stored in the resources folder of the WordCreator project.
 You can update them as much as you want (adding/removing lines).
 
 ## How does it work ?
-This project uses files of words to do some analysis and use them to create new words. Basically, it will look for all the bigrams (couple of letters) of a word and save their frequency of appearing. It will also save the frequency of all the next letters that will appear after a bigram.
-
-It works like a decision tree. When you have your first bigram (like "be" in this example), the program will randomly choose one of the next letters that can fit. We won't find abberations like finding "mlfpxct" thanks to this method, but only words that could have the most chance to appears.
+It works like a decision tree. When you have your first phoneme (like "a" in this example), the program will randomly choose one of the next phoneme that can fit. If two consonant or vowels are juxtaposed, we force the next one to be a vowel or a consonant. We won't find abberations like finding "mlfpxct" thanks to this method, but only words that could have the most chance to appears.
 
 ## Architecture
 You will find only 3 javaclass :
 
 First, the Launcher.java class : It's the entry point (the Main class) that's allow you to use different functions of the program.
 
-Then, you have the WordAnalyzerManager.java class : The interface that will read files and use them to create analysis (mostly read, write and process the analyzer).
+Then, you have the WordAnalyzerManager.java class : The interface that will use the WordAnalyzer file to create random words.
 
-And last, the WordAnalyzer.java class : the heart of this program. It will parse a word and analyze it structure to get the most precise analysis it can.
+And last, the WordAnalyzer.java class : the heart of this program. It will use an analysis to create new words.
