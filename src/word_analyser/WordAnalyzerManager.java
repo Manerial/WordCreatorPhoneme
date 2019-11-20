@@ -8,10 +8,10 @@ import org.json.JSONException;
 import utilities.BasicFunctions;
 import utilities.WordsFilesManager;
 
-public class WordAnalyserManager {
+public class WordAnalyzerManager {
 	private WordAnalyzer analyzer;
 
-	public WordAnalyserManager(WordAnalyzer analyzer) {
+	public WordAnalyzerManager(WordAnalyzer analyzer) {
 		setWordAnalyzer(analyzer);
 	}
 

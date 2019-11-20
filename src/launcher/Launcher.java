@@ -2,7 +2,7 @@ package launcher;
 import java.io.*;
 import org.json.*;
 
-import word_analyser.WordAnalyserManager;
+import word_analyser.WordAnalyzerManager;
 import word_analyser.WordAnalyzer;
 
 /**
@@ -38,13 +38,13 @@ public class Launcher {
 	
 	public static void testCreateWordList(WordAnalyzer wordAnalyzer) throws JSONException, IOException {
 		System.out.println("testCreateWordList");
-		WordAnalyserManager wordAnalyserManager = new WordAnalyserManager(wordAnalyzer);
+		WordAnalyzerManager wordAnalyserManager = new WordAnalyzerManager(wordAnalyzer);
 		wordAnalyserManager.createWordList(1000, "");
 	}
 	
 	public static void testCreateWordListFixLength(WordAnalyzer wordAnalyzer) throws JSONException, IOException {
 		System.out.println("testCreateWordListFixLength");
-		WordAnalyserManager wordAnalyserManager = new WordAnalyserManager(wordAnalyzer);
+		WordAnalyzerManager wordAnalyserManager = new WordAnalyzerManager(wordAnalyzer);
 		wordAnalyserManager.setWordAnalyzer(wordAnalyzer);
 		wordAnalyserManager.createWordListFixLength(1000, "", 5);
 	}
