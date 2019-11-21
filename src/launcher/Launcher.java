@@ -31,7 +31,7 @@ public class Launcher {
 		
 		testCreateWordList(wordAnalyzer);
 		
-		resultsFileName = "new_français_length_5.txt";
+		resultsFileName = "new_niini_length_5.txt";
 		wordAnalyzer.setResultsFilePath(resultsFileName);
 		testCreateWordListFixLength(wordAnalyzer);
 	}
