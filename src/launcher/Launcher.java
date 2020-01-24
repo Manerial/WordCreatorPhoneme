@@ -21,8 +21,6 @@ public class Launcher {
 	 * @throws IOException : for file management errors
 	 */
 	public static void main(String[] args) throws JSONException, IOException {
-		PrintStream out = new PrintStream("log.txt", "UTF-8");
-		System.setOut(out);
 		String analysisFileName = "analysis_niini.txt";
 		String resultsFileName = "new_niini.txt";
 		WordAnalyzer wordAnalyzer = new WordAnalyzer();
