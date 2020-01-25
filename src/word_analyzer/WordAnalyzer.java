@@ -57,7 +57,7 @@ public class WordAnalyzer {
 
 		while (true) {
 			String lastTwoChars = getTwoLastChar(newWord);
-			String nextChar = getNextChar(newWord, lastTwoChars);
+			String nextChar = addChar(newWord, lastTwoChars);
 			newWord += nextChar;
 			if(endOfWord(nextChar)) {
 				break;
@@ -66,7 +66,7 @@ public class WordAnalyzer {
 		return newWord;
 	}
 
-	private String getNextChar(String newWord, String lastTwoChars) throws JSONException {
+	private String addChar(String newWord, String lastTwoChars) throws JSONException {
 		String nextChar = getNextChar(newWord);
 		if(!hasVowel(lastTwoChars)) {
 			while(!hasVowel(nextChar)) {
@@ -76,6 +76,20 @@ public class WordAnalyzer {
 			while(!hasConsone(nextChar)) {
 				nextChar = getNextChar(newWord);
 			}
+		}
+		return nextChar;
+	}
+
+	private String getNextChar(String newWord) throws JSONException {
+		String nextChar = "";
+		JSONObject nextPossibilities = getNextPossibilities(newWord);
+		int randomNextCharRank = getRandomCharRank(nextPossibilities);
+		int sumOfPreviousCharRank = 0;
+		
+		Iterator<?> iteratorNextChar = nextPossibilities.keys();
+		while (!BasicFunctions.rankFound(sumOfPreviousCharRank, randomNextCharRank) && iteratorNextChar.hasNext()) {
+			nextChar = iteratorNextChar.next().toString();
+			sumOfPreviousCharRank += nextPossibilities.getInt(nextChar);
 		}
 		return nextChar;
 	}
@@ -124,20 +138,6 @@ public class WordAnalyzer {
 				lastTwoChars.contains("\u00f8");
 	}
 
-	private String getNextChar(String newWord) throws JSONException {
-		String nextChar = "";
-		JSONObject nextPossibilities = getNextPossibilities(newWord);
-		int randomNextCharRank = getRandomCharRank(nextPossibilities);
-		int sumOfPreviousCharRank = 0;
-		
-		Iterator<?> iteratorNextChar = nextPossibilities.keys();
-		while (!BasicFunctions.rankFound(sumOfPreviousCharRank, randomNextCharRank) && iteratorNextChar.hasNext()) {
-			nextChar = iteratorNextChar.next().toString();
-			sumOfPreviousCharRank += nextPossibilities.getInt(nextChar);
-		}
-		return nextChar;
-	}
-
 	/**
 	 * Get a random character rank in all the availables trigrams
 	 * 
@@ -172,8 +172,8 @@ public class WordAnalyzer {
 		if(lastLetter.equals("\u0303")) {
 			lastLetter = word.substring(word.length() - 2, word.length());
 		}
-		JSONObject nextTrigrams = phonemeAnalysis.getJSONObject(lastLetter);
-		return nextTrigrams;
+		JSONObject nextPossibilities = phonemeAnalysis.getJSONObject(lastLetter);
+		return nextPossibilities;
 	}
 
 	/**
